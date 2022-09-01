@@ -15,8 +15,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "test:cov": "react-scripts test --watchAll=false --coverage --testResultsProcessor jest-sonar-reporter"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
