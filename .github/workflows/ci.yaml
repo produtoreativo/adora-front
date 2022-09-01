@@ -1,4 +1,4 @@
-name: Deploy
+name: Continuous Integration - Feature Branch
 
 on:
   push:
