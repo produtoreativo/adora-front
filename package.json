@@ -16,7 +16,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "test:cov": "react-scripts test --watchAll=false --coverage --testResultsProcessor jest-sonar-reporter"
+    "test:cov2": "react-scripts test --watchAll=false --coverage --testResultsProcessor jest-sonar-reporter",
+    "lint": "npx eslint",
+    "lint:cov": "npx eslint -f json -o coverage/eslint-report.json .",
+    "test:cov": "react-scripts test --watchAll=false --coverage"
   },
   "eslintConfig": {
     "extends": [
@@ -37,6 +40,19 @@
     ]
   },
   "devDependencies": {
-    "jest-sonar-reporter": "^2.0.0"
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/index.js",
+      "<rootDir>/src/reportWebVitals.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
   }
 }
