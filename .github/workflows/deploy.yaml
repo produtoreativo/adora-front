@@ -14,6 +14,21 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
 
+    - name: Create env file
+      run: |
+        touch .env
+        echo REACT_APP_SERVER_URL=${{ secrets.CRA_URL }} >> .env
+        cat .env
+
+    - name: Run test with coverage
+      run: npm run test:cov
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
