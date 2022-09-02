@@ -31,8 +31,8 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        args: --severity-threshold=high
-        #command: monitor
+        #args: --severity-threshold=high
+        command: monitor
 
     - name: Run test with coverage
       run: npm run lint:cov
