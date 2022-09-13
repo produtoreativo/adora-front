@@ -1,27 +1,19 @@
-name: Deploy
+name: Deploy on S3
 
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
-    name: Build Image
+    name: Build & Deploy on S3
     runs-on: ubuntu-latest
-    environment: production
     steps:
       - name: Check out code
         uses: actions/checkout@v2
         with:
-          # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
-
-      - name: Create env file
-        run: |
-          touch .env
-          echo REACT_APP_SERVER_URL=${{ secrets.CRA_URL }} >> .env
-          cat .env
 
       - name: Install dependencies
         run: npm i
@@ -42,7 +34,7 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Build
@@ -60,3 +52,17 @@ jobs:
 
       - name: Invalidate Cloudfront
         run: aws cloudfront create-invalidation --distribution-id  ${{secrets.AWS_CF_DISTRIBUTION_ID}} --paths "/*" --no-cli-pager
+
+  k6:
+    name: K6 test
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Run XK6 Browser
+        uses: grafana/xk6-browser-github-action@v1
+        with:
+          include: k6/frontend.js
+          args: -e BASE_URL=${{ secrets.ADORA_FRONTEND }}
