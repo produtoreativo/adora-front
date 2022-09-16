@@ -1,3 +1,5 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=diogochaves_adora-front&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=diogochaves_adora-front)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
