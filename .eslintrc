@@ -1,0 +1,42 @@
+{
+  "extends": ["react-app"],
+  "plugins": ["import"],
+  "rules": {
+    "import/order": [
+      "error",
+      {
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        },
+        "newlines-between": "always",
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "builtin",
+            "position": "before"
+          },
+          {
+            "pattern": "{assets,assets/**,common,common/**,components,components/**,componentsV3,componentsV3/**,componentsV4,componentsV4/**,constants,constants/**,helpers,helpers/**,hooks,hooks/**,icons,icons/**,layouts,layouts/**,redux,redux/**,routes,routes/**,services,services/**,stories,stories/**,theme,theme/**,views,views/**}",
+            "group": "internal"
+          },
+          {
+            "pattern": ".*/**/*.scss",
+            "group": "index",
+            "position": "after"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin"]
+      }
+    ],
+    "no-console": "error"
+  }
+}

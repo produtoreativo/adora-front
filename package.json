@@ -17,9 +17,11 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "test:cov2": "react-scripts test --watchAll=false --coverage --testResultsProcessor jest-sonar-reporter",
-    "lint": "npx eslint",
+    "lint": "eslint --fix --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore",
     "lint:cov": "npx eslint -f json -o coverage/eslint-report.json .",
-    "test:cov": "react-scripts test --watchAll=false --coverage"
+    "test:cov": "react-scripts test --watchAll=false --coverage",
+    "prettier": "prettier --ignore-path .gitignore --write --list-different",
+    "commit": "git-cz"
   },
   "eslintConfig": {
     "extends": [
@@ -40,7 +42,19 @@
     ]
   },
   "devDependencies": {
-    "nth-check": "^2.0.1"
+    "@commitlint/cli": "^17.1.2",
+    "@commitlint/config-conventional": "^17.1.0",
+    "add": "^2.0.6",
+    "commitizen": "^4.2.5",
+    "cz-conventional-changelog": "3.3.0",
+    "eslint": "^8.23.1",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "nth-check": "^2.0.1",
+    "prettier": "^2.7.1",
+    "prettier-eslint": "^15.0.1",
+    "prettier-eslint-cli": "^7.1.0",
+    "yarn": "^1.22.19"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
@@ -54,6 +68,23 @@
         "lines": 80,
         "statements": 80
       }
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "yarn commitlint --edit $1",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.+(js|jsx|ts|tsx)": [
+      "yarn prettier",
+      "yarn lint"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
     }
   }
 }
