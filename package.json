@@ -21,7 +21,8 @@
     "lint:cov": "npx eslint -f json -o coverage/eslint-report.json .",
     "test:cov": "react-scripts test --watchAll=false --coverage",
     "prettier": "prettier --ignore-path .gitignore --write --list-different",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -72,7 +73,7 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "yarn commitlint --edit $1 ",
+      "commit-msg": "commitlint --edit $1",
       "pre-commit": "lint-staged"
     }
   },
