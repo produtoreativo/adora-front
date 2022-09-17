@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - week-2
 
 jobs:
   build:
