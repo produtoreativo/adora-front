@@ -2,6 +2,8 @@
 
 [![Known Vulnerabilities](https://snyk.io/test/github/diogochaves/adora-front/badge.svg)](https://snyk.io/test/github/diogochaves/adora-front)
 
+[![Deploy](https://github.com/diogochaves/adora-front/actions/workflows/deploy.yml/badge.svg?branch=master)](https://github.com/diogochaves/adora-front/actions/workflows/deploy.yml)
+
 
 # Getting Started with Create React App
 
