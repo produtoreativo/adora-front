@@ -1,17 +1,19 @@
-name: Deploy
+name: Deploy on S3
 
 on:
   push:
     branches:
-      - master
-      - week-2
+      - main
 
 jobs:
   build:
-    name: Build Image
+    name: Build & Deploy on S3
     runs-on: ubuntu-latest
-    environment: production
     steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
     - name: Check out code
       uses: actions/checkout@v2
@@ -60,12 +62,21 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
 
     - name: Sync S3
-      run: |
-        aws s3 sync build s3://${{ secrets.AWS_S3_BUCKET }} --acl public-read
+      run: aws s3 sync build s3://${{ secrets.AWS_S3_BUCKET }} --acl public-read
 
     - name: Invalidate Cloudfront
-      run: |
-        aws cloudfront create-invalidation \
-        --distribution-id ${{ secrets.AWS_CF_DIST_ID }} \
-        --paths "/*" \
-        --no-cli-pager
+      run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CF_DIST_ID }} --paths "/*" --no-cli-pager
+
+  k6:
+    name: K6 test
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Run XK6 Browser
+        uses: grafana/xk6-browser-github-action@v1
+        with:
+          include: k6/frontend.js
+          args: -e BASE_URL=${{ secrets.ADORA_FRONTEND }}
