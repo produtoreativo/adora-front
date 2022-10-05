@@ -3,7 +3,7 @@ name: Deploy on S3
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
         run: |
           touch .env
           echo REACT_APP_SERVER_URL=${{ secrets.CRA_URL }} > .env
-          cat .env
+          cat .env      
 
       - name: Install dependencies
         run: npm i
@@ -40,8 +40,10 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_RUN_PROJECT_KEY: ${{ secrets.SONAR_RUN_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
 
       - name: Build
         run: npm run build
@@ -54,10 +56,10 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Sync S3
-        run: aws s3 sync build s3://${{secrets.AWS_S3_BUCKET}} --acl public-read
+        run: aws s3 sync build s3://${{ secrets.AWS_S3_BUCKET }} --acl public-read
 
       - name: Invalidate Cloudfront
-        run: aws cloudfront create-invalidation --distribution-id  ${{secrets.AWS_CF_DISTRIBUTION_ID}} --paths "/*" --no-cli-pager
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CF_DIST_ID }} --paths "/*" --no-cli-pager
 
       - name: Sentry new release log
         uses: getsentry/action-release@v1
