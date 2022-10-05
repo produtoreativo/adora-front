@@ -15,43 +15,57 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install dependencies
-        run: npm i
+    - name: Check out code
+      uses: actions/checkout@v2
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
 
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: monitor
+    - name: Create env file
+      run: |
+        touch .env
+        echo REACT_APP_SERVER_URL=${{ secrets.CRA_URL }} >> .env
+        cat .env
 
-      - name: Run test with coverage
-        run: npm run lint:cov
+    - name: Install dependencies
+      run: npm i
 
-      - name: Run test with coverage
-        run: npm run test:cov
+    - name: Run Snyk to check for vulnerabilities
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        command: monitor
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: Run test with coverage
+      run: npm run lint:cov
 
-      - name: Build
-        run: npm run build
+    - name: Run test with coverage
+      run: npm run test:cov
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_RUN_PROJECT_KEY: ${{ secrets.SONAR_RUN_PROJECT_KEY }}
+        SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
 
-      - name: Sync S3
-        run: aws s3 sync build s3://${{secrets.AWS_S3_BUCKET}} --acl public-read
+    - name: Build
+      run: npm run build
 
-      - name: Invalidate Cloudfront
-        run: aws cloudfront create-invalidation --distribution-id  ${{secrets.AWS_CF_DISTRIBUTION_ID}} --paths "/*" --no-cli-pager
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Sync S3
+      run: aws s3 sync build s3://${{ secrets.AWS_S3_BUCKET }} --acl public-read
+
+    - name: Invalidate Cloudfront
+      run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CF_DIST_ID }} --paths "/*" --no-cli-pager
 
   k6:
     name: K6 test
