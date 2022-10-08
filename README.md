@@ -1,3 +1,10 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=produtoreativo_adora-front&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=produtoreativo_adora-front)
+
+[![Known Vulnerabilities](https://snyk.io/test/github/produtoreativo/adora-front/badge.svg)](https://snyk.io/test/github/produtoreativo/adora-front)
+
+[![Deploy](https://github.com/produtoreativo/adora-front/actions/workflows/deploy.yaml/badge.svg?branch=master)](https://github.com/produtoreativo/adora-front/actions/workflows/deploy.yaml)
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
