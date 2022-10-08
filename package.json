@@ -78,8 +78,8 @@
   },
   "lint-staged": {
     "src/**/*": [
-      "yarn prettier",
-      "yarn lint"
+      "yarn lint",
+      "yarn prettier"
     ]
   },
   "config": {
