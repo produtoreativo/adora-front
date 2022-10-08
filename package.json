@@ -74,7 +74,7 @@
   "husky": {
     "hooks": {
       "commit-msg": "yarn commitlint --edit $1",
-      "pre-commit": "lint-staged"
+      "pre-commit": "npx lint-staged"
     }
   },
   "lint-staged": {
