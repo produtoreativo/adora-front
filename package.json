@@ -21,6 +21,13 @@
     "lint:cov": "npx eslint -f json -o coverage/eslint-report.json .",
     "test:cov": "react-scripts test --watchAll=false --coverage"
   },
+  "overrides": {
+    "svgo": {
+      "css-select": {
+        "nth-check": "^2.0.1"
+      }
+    }
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
